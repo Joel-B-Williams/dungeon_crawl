@@ -4,13 +4,15 @@ require_relative 'monster'
 
 class PlayerCharacter
  	include Combat
-  attr_reader :armor, :next_level
+  attr_reader :armor, :next_level, :xp, :gold
+  attr_accessor :alive
   def initialize
     @xp = 0
     @level = 1
-	  @coins = 0
+	  @gold = 0
   	@items = Hash.new(0)
   	@next_level = [100]
+  	@alive = true	
   end
 	## ===Basic Utility Methods===
 #method to rest to replenish health
@@ -36,12 +38,12 @@ class PlayerCharacter
 	end
 #method to look in backpack
 	def inventory
-		puts "Coins: #{@coins}"
+		puts "gold: #{@gold}"
 		@items.each {|item, amount| puts "#{item}: #{amount}"}
 	end
-#method to gain and spend coins
-  def change_coins(amount)
-    @coins += amount
+#method to gain and spend gold
+  def change_gold(amount)
+    @gold += amount
   end
 #method to gain items
   def gain_item(item)
@@ -95,4 +97,25 @@ class Mage < PlayerCharacter
 end
 
 
+# player = Mage.new("Abe the Grand")
+# gobbo = Monster.new("Gobbo", 0, 4, 30, 10, rand(0..1))
 
+# while gobbo.alive
+# 	player.attack_target(player, gobbo, (1..6))
+# 	gobbo.attack_target(gobbo, player, (1..4))
+# 	# player.blast(player, gobbo)
+# 	break if !player.alive
+# end
+# ork = spawn_monster("Ork", 10, 8, 40, 20, rand(1..3))
+# p ork.name
+# p ork.alive
+
+# while ork.alive
+# 	# player.attack_target(player, ork, (1..6))
+# 	ork.attack_target(ork, player, (1..4))
+# 		break if !player.alive
+# 	player.blast(player, ork)
+# end
+
+# player.inspect_character
+# player.inventory
