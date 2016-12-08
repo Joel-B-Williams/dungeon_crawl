@@ -6,6 +6,8 @@ module Spells
       puts "#{attacker.name} casts blast!"
       cast_spell(2) 
       target.take_damage(attacker, target, rand(2..5))
+    else
+    	puts "#{attacker.name} doesn't have enough MP!"
     end
   end
 end
