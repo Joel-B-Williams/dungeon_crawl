@@ -3,21 +3,22 @@ require_relative 'spells'
 require_relative 'monster'
 
 class PlayerCharacter
- 	include Combat
-  attr_reader :armor, :next_level, :xp, :gold
-  attr_accessor :alive
+ 	include Combat 
+  attr_reader :armor, :next_level, :xp, :gold, :alive
   def initialize
     @xp = 0
     @level = 1
 	  @gold = 0
   	@items = Hash.new(0)
   	@next_level = [100]
+  	@location = "town"
   	@alive = true	
   end
 	## ===Basic Utility Methods===
 #method to rest to replenish health
 	def restore_health(amount)
 		@hp += amount
+		@hp = @max_hp if @hp > @max_hp
 	end
 #method to equip armor
   def equip_armor(protection)
@@ -26,7 +27,7 @@ class PlayerCharacter
 #method to earn xp
 	def gain_xp(amount)
 		@xp += amount
-		@level_up if @xp >= @next_level[0] #>> should check if you've earned enough to reach next level
+		level_up if @xp >= @next_level[0] #>> should check if you've earned enough to reach next level
 	end
 
 #method to inspect character status
@@ -61,13 +62,15 @@ end
 #====core mage class for player character====
 class Mage < PlayerCharacter
 	include Spells
-	attr_accessor :hp
-	attr_reader :accuracy, :name
+	attr_accessor :hp, :alive
+	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp
 	def initialize(name)
     super()
 	  @name = name
 	  @class = "mage"
+	  @max_hp = 10
 		@hp = 10
+		@max_mp = 10
 		@mp = 10
 		@accuracy = 50
 		@armor = 0
@@ -77,6 +80,7 @@ class Mage < PlayerCharacter
 #method to restore magic points
   def restore_magic(amount)
     @mp += amount
+    @mp = @max_mp if @mp > @max_mp
   end
 #method to verify enough mp available
 	def check_mp(mp_cost)
@@ -88,34 +92,73 @@ class Mage < PlayerCharacter
 	end
 #method to level up 
 	def level_up
+		puts celebrate
 		@level += 1
-		@hp += 5
-		@mp += 5
+		@max_hp += 5
+		@max_mp += 5
 		@accuracy += 5
 		@next_level[0] += @next_level[0]
+	end
+#method to celebrate leveling up
+	def celebrate
+		"You have leveled up.  Huzzahr."
 	end
 end
 
 
-# player = Mage.new("Abe the Grand")
-# gobbo = Monster.new("Gobbo", 0, 4, 30, 10, rand(0..1))
 
-# while gobbo.alive
-# 	player.attack_target(player, gobbo, (1..6))
-# 	gobbo.attack_target(gobbo, player, (1..4))
-# 	# player.blast(player, gobbo)
-# 	break if !player.alive
-# end
-# ork = spawn_monster("Ork", 10, 8, 40, 20, rand(1..3))
-# p ork.name
-# p ork.alive
+def fight_krub(player_character) 
+	krub = spawn_krub
+	puts "You found a Krub!"
+	while krub.alive
+		puts "What action do you take?(staff, blast)"
+		action = gets.chomp
+		case action
+		when "staff" then player_character.use_staff(player_character, krub)
+		when "blast" then player_character.blast(player_character, krub)
+		else
+			puts "That's not a viable action!"
+			action = gets.chomp
+		end
+		if krub.alive
+			krub.krub_attack(krub, player_character) 
+		end
+	end
+end
 
-# while ork.alive
-# 	# player.attack_target(player, ork, (1..6))
-# 	ork.attack_target(ork, player, (1..4))
-# 		break if !player.alive
-# 	player.blast(player, ork)
-# end
 
-# player.inspect_character
-# player.inventory
+puts "What are you called, magus?"
+name = gets.chomp
+player = Mage.new(name)
+puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
+action = gets.chomp
+while action != "q"
+	case action
+	when "hunt Krubs"  
+  	fight_krub(player) 
+  	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "hunt Throgs" then throgb
+	when "rest"
+		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
+		days = gets.chomp
+		player.change_gold(-days.to_i)
+		player.restore_health(days.to_i*3)
+		player.restore_magic(days.to_i*3)
+		puts "You have rested for #{days} day(s)."
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "status" 
+		player.inspect_character
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "inventory"
+		player.inventory
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	else 
+		puts "Try again, #{player.name}."
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	end
+end
