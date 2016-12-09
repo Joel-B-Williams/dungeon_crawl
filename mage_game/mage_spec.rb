@@ -98,4 +98,14 @@ describe Mage do
 	  expect(player.armor). to eq 0
 	end
 
+	it "recognizes when shield spell is active" do
+		player.mage_shield(player)
+		expect(player.mage_shield_active(player)). to eq true
+	end
+
+	it "removes shields once used" do
+		player.mage_shield(player)
+		expect(player.mage_shield_break(player)). to eq 0
+	end
+
 end

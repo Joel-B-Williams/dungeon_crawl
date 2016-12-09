@@ -36,12 +36,13 @@ module Combat
 def fight_monster(player_character, monster) # moved "case" to choice of monster to hunt (spawns there instead)
 	puts "You found a #{monster.name}!"
 	until check_dead(monster) || check_dead(player_character)
-		puts "What action do you take?(staff, blast, armor)"
+		puts "What action do you take?(staff, blast, armor, shield)"
 		action = gets.chomp
 		case action
 		when "staff" then player_character.use_staff(player_character, monster)
 		when "blast" then player_character.blast(player_character, monster)
 		when "armor" then player_character.mage_armor(player_character)
+		when "shield" then player_character.mage_shield(player_character)
 		else
 			puts "You have fumbled your action!" #retry/redo?
 		end
@@ -51,6 +52,7 @@ def fight_monster(player_character, monster) # moved "case" to choice of monster
 			puts "#{player_character.name} has found #{monster.gold} gold!" if monster.gold > 0
 		else
 			monster.monster_attack(monster, player_character, monster.damage_range) 
+			#insert case statement special abilities here
 			if check_dead(player_character)
 				defeat_enemy(monster, player_character)
 				monster.change_gold(player_character.gold) if player_character.gold > 0
@@ -58,6 +60,7 @@ def fight_monster(player_character, monster) # moved "case" to choice of monster
 				exit
 			end
 		end
+		#conditionally reduce/remove armor spell
 		if player_character.mage_armor_active(player_character)
 			player_character.mage_armor_countdown(player_character)
 			player_character.mage_armor_ends(player_character) if player_character.mage_armor_active(player_character) == false
@@ -93,12 +96,18 @@ end
 # 	end
 # end
 
-		#### MONSTER ATTACKS ####
+		#### MONSTER ATTACKmage_shield_active(caster)S ####
 
-	def monster_attack(monster, player_character, damage_range)  ### Combine into one method - monster and rand(dmg) variables ### NOTE -> check_shield would go in these only?
+	def monster_attack(monster, player_character, damage_range) ## check_shield would go in these only?
 		if attack_target(monster, player_character) 
-			puts "#{monster.name} hit #{player_character.name}!"
-			take_damage(monster, player_character, rand(damage_range)) 
+## start shield logic
+			if player_character.mage_shield_active(player_character)
+				puts "#{player_character.name}'s shield blocked the attack!"
+				player_character.mage_shield_break(player_character)
+			else
+				puts "#{monster.name} hit #{player_character.name}!"
+				take_damage(monster, player_character, rand(damage_range)) 
+			end
 		else
 			puts "#{monster.name} missed!"
 		end

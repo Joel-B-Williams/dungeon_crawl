@@ -21,9 +21,7 @@ module Spells
   	end
   end
 
-#method to reduce counter if it's > 0
-# need method to reduce armor when coutner hits 0 (not each turn it's 0)
-#followed by method to check if counter > 0 to conditionally deacctivate armor
+## Associated Mage Armor methods to check/reduce/remove spell
   def mage_armor_countdown(caster)
   	caster.armor_turns_left -= 1
   end
@@ -36,5 +34,23 @@ module Spells
   	caster.armor -= caster.armor_bonus
   end
 
+  def mage_shield(caster)
+  	if caster.check_mp(caster.shield_cost)
+  		puts "#{caster.name} casts mage shield!"
+  		cast_spell(caster.shield_cost)
+  		caster.shield_count += caster.shields_generated
+  	else
+  		puts "#{caster.name} doesn't have enough MP!"
+  	end
+  end
+
+## Associated Mage Shield methods to check/reduce/remove spell
+  def mage_shield_active(caster)
+  	caster.shield_count > 0
+  end
+
+  def mage_shield_break(caster)
+  	caster.shield_count -= 1
+  end
 
 end
