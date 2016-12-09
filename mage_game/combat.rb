@@ -36,7 +36,7 @@ module Combat
 def fight_krub(player_character) ## Turn into general use thing, add monster variable/case statement
 	krub = spawn_krub
 	puts "You found a Krub!"
-	until check_dead(krub)
+	until check_dead(krub) || check_dead(player_character)
 		puts "What action do you take?(staff, blast)"
 		action = gets.chomp
 		case action
@@ -63,7 +63,7 @@ end
 def fight_throg(player_character) ## Turn into general use thing, add monster variable/case statement
 	throg = spawn_throg
 	puts "You found a Throg!"
-	until check_dead(throg)
+	until check_dead(throg) || check_dead(player_character)
 		puts "What action do you take?(staff, blast)"
 		action = gets.chomp
 		case action
@@ -82,6 +82,7 @@ def fight_throg(player_character) ## Turn into general use thing, add monster va
 				defeat_enemy(throg, player_character)
 				throg.change_gold(player_character.gold) if player_character.gold > 0
 				puts "#{throg.name} has found #{player_character.gold} gold!" if player_character.gold > 0
+				break
 			end
 		end
 	end

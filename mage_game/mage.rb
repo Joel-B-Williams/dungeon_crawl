@@ -128,8 +128,8 @@ puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
 puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
-action = gets.chomp
-while action != "q"
+action = gets.chomp #NOTE keeps going after player death - no contingency
+until action == "q"
 	case action
 	when "hunt Krubs"  
   	player.fight_krub(player) 
