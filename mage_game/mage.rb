@@ -127,7 +127,6 @@ end
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Congrats, #{player.name}, you have gained the power of the ancients!"
 puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
 action = gets.chomp
 while action != "q"
