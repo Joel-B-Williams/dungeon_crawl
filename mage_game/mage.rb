@@ -68,8 +68,8 @@ end
 #====core mage class for player character====
 class Mage < PlayerCharacter
 	include Spells
-	attr_accessor :hp, :alive
-	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp, :level, :blast_cost, :bonus_damage
+	attr_accessor :hp, :alive, :armor, :armor_turns_left
+	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp, :level, :blast_cost, :bonus_damage, :armor_cost, :armor_bonus, :armor_duration
 	def initialize(name)
     super()
 	  @name = name
@@ -83,6 +83,10 @@ class Mage < PlayerCharacter
 # Spell Variables
 		@blast_cost = 2
 		@bonus_damage = 0
+		@armor_cost = 4
+		@armor_bonus = 20
+		@armor_duration = 5
+		@armor_turns_left = 0
 	end
 
 ##==Mage specific methods==
@@ -123,42 +127,42 @@ end
 
 
 
-### FUNCTIONAL DRIVER CODE ###
-puts "What are you called, magus?"
-name = gets.chomp
-player = Mage.new(name)
-puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
-action = gets.chomp #NOTE keeps going after player death - no contingency
-until action == "q"
-	case action
-	when "hunt Krubs"  
-  	player.fight_krub(player) 
-  	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	when "hunt Throgs" 
-		player.fight_throg(player)
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	when "rest"
-		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
-		days = gets.chomp.to_i
-		player.change_gold(-days)
-		player.restore_health(days*3)
-		player.restore_magic(days*3)
-		puts "You have rested for #{days} day(s)."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	when "status" 
-		player.inspect_character
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	when "inventory"
-		player.inventory
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	else 
-		puts "Try again, #{player.name}."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
-	end
-end
+# ### FUNCTIONAL DRIVER CODE ###
+# puts "What are you called, magus?"
+# name = gets.chomp
+# player = Mage.new(name)
+# puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
+# action = gets.chomp #NOTE keeps going after player death - no contingency
+# until action == "q"
+# 	case action
+# 	when "hunt Krubs"  
+#   	player.fight_krub(player) 
+#   	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	when "hunt Throgs" 
+# 		player.fight_throg(player)
+# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	when "rest"
+# 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
+# 		days = gets.chomp.to_i
+# 		player.change_gold(-days)
+# 		player.restore_health(days*3)
+# 		player.restore_magic(days*3)
+# 		puts "You have rested for #{days} day(s)."
+# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	when "status" 
+# 		player.inspect_character
+# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	when "inventory"
+# 		player.inventory
+# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	else 
+# 		puts "Try again, #{player.name}."
+# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+# 		action = gets.chomp
+# 	end
+# end

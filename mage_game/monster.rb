@@ -46,6 +46,7 @@ end
 def spawn_krub 
   krub = spawn_monster("Krub", 0, 4, 30, 10, rand(0..1))
 end
+
 def spawn_throg 
-  throg = spawn_monster("Throg", 10, 8, 40, 20, rand(1..3))
+  throg = spawn_monster("Throg", 20, 8, 50, 20, rand(1..3))
 end

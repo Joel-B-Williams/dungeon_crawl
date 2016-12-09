@@ -60,3 +60,25 @@ describe Monster do
 	end
 end
 
+require_relative 'spells'
+
+describe Mage do
+	let(:player) {Mage.new("Enyx")}
+
+	it "increases player armor when armor spell is cast" do
+		player.mage_armor(player)
+		expect(player.armor). to eq 20
+	end	
+
+	it "does not stack armor bonus of armor spell when cast multiple times" do
+		player.mage_armor(player)
+		player.mage_armor(player)
+		expect(player.armor). to eq 20
+	end
+
+	it "increases duration (stacking) of armor spell when cast" do
+		player.mage_armor(player)
+		player.mage_armor(player)
+		expect(player.armor_turns_left). to eq 10
+	end
+end

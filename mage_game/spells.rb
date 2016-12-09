@@ -9,4 +9,15 @@ module Spells
     	puts "#{attacker.name} doesn't have enough MP!"
     end
   end
+
+  def mage_armor(caster)
+  	if caster.check_mp(caster.armor_cost)
+  		puts "#{caster.name} casts mage armor!"
+  		caster.armor += caster.armor_bonus if caster.armor_turns_left == 0
+  		caster.armor_turns_left += caster.armor_duration
+  	else
+  		puts "#{caster.name} doesn't have enough MP!"
+  	end
+  end
+
 end
