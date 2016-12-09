@@ -49,7 +49,7 @@ end
 require_relative 'monster'
 
 describe Monster do
-	let(:krub) {Monster.new("Krub", 0, 4, 30, 10, 1)}
+	let(:krub) {Monster.new("Krub", 0, 4, 30, 10, 1, (1..4))}
 
 	it "gains player's XP if it kills the player" do
 		expect(krub.gain_xp(100)). to eq 100
@@ -81,4 +81,21 @@ describe Mage do
 		player.mage_armor(player)
 		expect(player.armor_turns_left). to eq 10
 	end
+
+	it "recognizes armor spell is active" do
+		player.mage_armor(player)
+		expect(player.mage_armor_active(player)). to eq true
+	end
+
+	it "removes armor bonus when spell ends" do
+		player.mage_armor(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+	  player.mage_armor_ends(player) if player.mage_armor_active(player) == false
+	  expect(player.armor). to eq 0
+	end
+
 end
