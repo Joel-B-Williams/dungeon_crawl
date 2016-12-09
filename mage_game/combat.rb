@@ -55,6 +55,7 @@ def fight_krub(player_character) ## Turn into general use thing, add monster var
 				defeat_enemy(krub, player_character)
 				krub.change_gold(player_character.gold) if player_character.gold > 0
 				puts "#{krub.name} has found #{player_character.gold} gold!" if player_character.gold > 0
+				exit
 			end
 		end
 	end
@@ -82,7 +83,7 @@ def fight_throg(player_character) ## Turn into general use thing, add monster va
 				defeat_enemy(throg, player_character)
 				throg.change_gold(player_character.gold) if player_character.gold > 0
 				puts "#{throg.name} has found #{player_character.gold} gold!" if player_character.gold > 0
-				break
+				exit
 			end
 		end
 	end
