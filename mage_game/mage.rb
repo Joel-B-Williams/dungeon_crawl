@@ -50,6 +50,8 @@ class PlayerCharacter
 		puts "#{@name}'s chance of hitting something is #{accuracy}%."
 		puts "Hit Points: #{@hp}"
 		puts "Magic Points: #{@mp}" if @mp
+		puts "Armor: #{@armor}" if @armor > 0
+		puts "Mage Armor Duration: #{@armor_turns_left}" if @armor_turns_left > 0
 	end
 ### UNUSED METHODS FOR ITEMS
 # #method to gain items
@@ -127,42 +129,44 @@ end
 
 
 
-# ### FUNCTIONAL DRIVER CODE ###
-# puts "What are you called, magus?"
-# name = gets.chomp
-# player = Mage.new(name)
-# puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
-# action = gets.chomp #NOTE keeps going after player death - no contingency
-# until action == "q"
-# 	case action
-# 	when "hunt Krubs"  
-#   	player.fight_krub(player) 
-#   	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	when "hunt Throgs" 
-# 		player.fight_throg(player)
-# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	when "rest"
-# 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
-# 		days = gets.chomp.to_i
-# 		player.change_gold(-days)
-# 		player.restore_health(days*3)
-# 		player.restore_magic(days*3)
-# 		puts "You have rested for #{days} day(s)."
-# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	when "status" 
-# 		player.inspect_character
-# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	when "inventory"
-# 		player.inventory
-# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	else 
-# 		puts "Try again, #{player.name}."
-# 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-# 		action = gets.chomp
-# 	end
-# end
+### FUNCTIONAL DRIVER CODE ###
+puts "What are you called, magus?"
+name = gets.chomp
+player = Mage.new(name)
+puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
+action = gets.chomp #NOTE keeps going after player death - no contingency
+until action == "q"
+	case action
+	when "hunt Krubs" 
+		krub = spawn_krub
+  	player.fight_monster(player, krub) 
+  	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "hunt Throgs" 
+		throg = spawn_throg
+		player.fight_monster(player, throg)
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "rest"
+		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
+		days = gets.chomp.to_i
+		player.change_gold(-days)
+		player.restore_health(days*3)
+		player.restore_magic(days*3)
+		puts "You have rested for #{days} day(s)."
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "status" 
+		player.inspect_character
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	when "inventory"
+		player.inventory
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	else 
+		puts "Try again, #{player.name}."
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
+	end
+end

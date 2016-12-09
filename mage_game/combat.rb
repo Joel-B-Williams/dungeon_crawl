@@ -33,81 +33,85 @@ module Combat
 	end
 
 			#### FIGHT LOOPS ####
-def fight_krub(player_character) ## Turn into general use thing, add monster variable/case statement
-	krub = spawn_krub
-	puts "You found a Krub!"
-	until check_dead(krub) || check_dead(player_character)
-		puts "What action do you take?(staff, blast)"
+def fight_monster(player_character, monster) # moved "case" to choice of monster to hunt (spawns there instead)
+	puts "You found a #{monster.name}!"
+	until check_dead(monster) || check_dead(player_character)
+		puts "What action do you take?(staff, blast, armor)"
 		action = gets.chomp
 		case action
-		when "staff" then player_character.use_staff(player_character, krub)
-		when "blast" then player_character.blast(player_character, krub)
+		when "staff" then player_character.use_staff(player_character, monster)
+		when "blast" then player_character.blast(player_character, monster)
+		when "armor" then player_character.mage_armor(player_character)
 		else
 			puts "You have fumbled your action!" #retry/redo?
 		end
-		if check_dead(krub)
-			defeat_enemy(player_character, krub)
-			player_character.change_gold(krub.gold) if krub.gold > 0
-			puts "#{player_character.name} has found #{krub.gold} gold!" if krub.gold > 0
+		if check_dead(monster)
+			defeat_enemy(player_character, monster)
+			player_character.change_gold(monster.gold) if monster.gold > 0
+			puts "#{player_character.name} has found #{monster.gold} gold!" if monster.gold > 0
 		else
-			krub.krub_attack(krub, player_character) #### NOTE this will be awkward if method generalized
+			monster.monster_attack(monster, player_character, monster.damage_range) 
 			if check_dead(player_character)
-				defeat_enemy(krub, player_character)
-				krub.change_gold(player_character.gold) if player_character.gold > 0
-				puts "#{krub.name} has found #{player_character.gold} gold!" if player_character.gold > 0
+				defeat_enemy(monster, player_character)
+				monster.change_gold(player_character.gold) if player_character.gold > 0
+				puts "#{monster.name} has found #{player_character.gold} gold!" if player_character.gold > 0
 				exit
 			end
+		end
+		if player_character.mage_armor_active(player_character)
+			player_character.mage_armor_countdown(player_character)
+			player_character.mage_armor_ends(player_character) if player_character.mage_armor_active(player_character) == false
 		end
 	end
 end
 
-def fight_throg(player_character) ## Turn into general use thing, add monster variable/case statement
-	throg = spawn_throg
-	puts "You found a Throg!"
-	until check_dead(throg) || check_dead(player_character)
-		puts "What action do you take?(staff, blast)"
-		action = gets.chomp
-		case action
-		when "staff" then player_character.use_staff(player_character, throg)
-		when "blast" then player_character.blast(player_character, throg)
-		else
-			puts "You have fumbled your action!" #retry/redo?
-		end
-		if check_dead(throg)
-			defeat_enemy(player_character, throg)
-			player_character.change_gold(throg.gold) if throg.gold > 0
-			puts "#{player_character.name} has found #{throg.gold} gold!" if throg.gold > 0
-		else
-			throg.throg_attack(throg, player_character) #### NOTE this will be awkward if method generalized
-			if check_dead(player_character)
-				defeat_enemy(throg, player_character)
-				throg.change_gold(player_character.gold) if player_character.gold > 0
-				puts "#{throg.name} has found #{player_character.gold} gold!" if player_character.gold > 0
-				exit
-			end
-		end
-	end
-end
+# def fight_throg(player_character) ## Turn into general use thing, add monster variable/case statement
+# 	throg = spawn_throg
+# 	puts "You found a Throg!"
+# 	until check_dead(throg) || check_dead(player_character)
+# 		puts "What action do you take?(staff, blast)"
+# 		action = gets.chomp
+# 		case action
+# 		when "staff" then player_character.use_staff(player_character, throg)
+# 		when "blast" then player_character.blast(player_character, throg)
+# 		else
+# 			puts "You have fumbled your action!" #retry/redo?
+# 		end
+# 		if check_dead(throg)
+# 			defeat_enemy(player_character, throg)
+# 			player_character.change_gold(throg.gold) if throg.gold > 0
+# 			puts "#{player_character.name} has found #{throg.gold} gold!" if throg.gold > 0
+# 		else
+# 			throg.throg_attack(throg, player_character) #### NOTE this will be awkward if method generalized
+# 			if check_dead(player_character)
+# 				defeat_enemy(throg, player_character)
+# 				throg.change_gold(player_character.gold) if player_character.gold > 0
+# 				puts "#{throg.name} has found #{player_character.gold} gold!" if player_character.gold > 0
+# 				exit
+# 			end
+# 		end
+# 	end
+# end
 
 		#### MONSTER ATTACKS ####
 
-	def krub_attack(krub, player_character)  ### Combine into one method - monster and rand(dmg) variables ### NOTE -> check_shield would go in these only?
-		if attack_target(krub, player_character) 
-			puts "#{krub.name} hit #{player_character.name}!"
-			take_damage(krub, player_character, rand(1..4)) 
+	def monster_attack(monster, player_character, damage_range)  ### Combine into one method - monster and rand(dmg) variables ### NOTE -> check_shield would go in these only?
+		if attack_target(monster, player_character) 
+			puts "#{monster.name} hit #{player_character.name}!"
+			take_damage(monster, player_character, rand(damage_range)) 
 		else
-			puts "#{krub.name} missed!"
+			puts "#{monster.name} missed!"
 		end
 	end
 
-		def throg_attack(throg, player_character)
-		if attack_target(throg, player_character) 
-			puts "#{throg.name} hit #{player_character.name}!"
-			take_damage(throg, player_character, rand(1..4)) 
-		else
-			puts "#{throg.name} missed!"
-		end
-	end
+	# 	def throg_attack(throg, player_character)
+	# 	if attack_target(throg, player_character) 
+	# 		puts "#{throg.name} hit #{player_character.name}!"
+	# 		take_damage(throg, player_character, rand(1..4)) 
+	# 	else
+	# 		puts "#{throg.name} missed!"
+	# 	end
+	# end
 
 		#### PLAYER WEAPONS ####
 	def use_staff(player_character, target)
