@@ -3,7 +3,7 @@ require_relative 'combat'
 class Monster
  	include Combat
   attr_accessor :hp, :xp, :gold, :alive
-  attr_reader :name, :armor, :accuracy, :xp, :aliv
+  attr_reader :name, :armor, :accuracy
   def initialize(name, armor, hp, accuracy, xp, gold)
     @name = name
     @armor = armor
@@ -38,7 +38,7 @@ end
 def spawn_monster(name, armor, hp, accuracy, xp, gold)
   monster = Monster.new(name, armor, hp, accuracy, xp, gold)
   #monster.activate_monster # is activating whenever player attacks/casts damaging spell
-  monster
+  #monster
 end
 
 
