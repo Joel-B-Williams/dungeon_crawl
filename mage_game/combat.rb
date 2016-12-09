@@ -12,13 +12,13 @@ module Combat
 	# 	end
 	# end
 
-	def attack_target(attacker, target, damage_range)
+	def attack_target(attacker, target)
 		(attacker.accuracy - target.armor) >= (rand(1..100))
 	end
 
-	def take_damage(attacker, target, damage)
-		puts "#{target.name} took #{damage} damage!"
-		target.hp -= damage
+	def take_damage(attacker, target, damage_range)
+		puts "#{target.name} took #{damage_range} damage!"
+		target.hp -= damage_range
 	end
 
 	def check_dead(target)
@@ -63,15 +63,19 @@ end
 		#### MONSTER ATTACKS ####
 
 	def krub_attack(krub, player_character)
-		attack_target(krub, player_character, (1..4)) 
+		if attack_target(krub, player_character) 
+			puts "#{krub.name} hit #{player_character.name}!"
+			take_damage(krub, player_character, rand(1..4)) 
+		else
+			puts "#{krub.name} missed!"
+		end
 	end
 
 		#### PLAYER WEAPONS ####
 	def use_staff(player_character, target)
-		if (player_character.accuracy - target.armor) >= (rand(1..100))
-			damage = rand(1..6)
+		if attack_target(player_character, target)
 			puts "#{player_character.name} hit #{target.name}!"
-			target.take_damage(player_character, target, damage)
+			target.take_damage(player_character, target, rand(1..6))
 		else
 			puts "#{player_character.name} missed #{target.name}!"
 		end
