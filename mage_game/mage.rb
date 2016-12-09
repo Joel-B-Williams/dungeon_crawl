@@ -15,20 +15,34 @@ class PlayerCharacter
   	@alive = true	
   end
 	## ===Basic Utility Methods===
+#method to earn xp
+	def gain_xp(amount)
+		@xp += amount
+		level_up if @xp >= @next_level[0] #>> should check if you've earned enough to reach next level
+		@xp
+	end
+	
 #method to rest to replenish health
 	def restore_health(amount)
 		@hp += amount
 		@hp = @max_hp if @hp > @max_hp
 	end
+
 #method to equip armor
-  def equip_armor(protection)
+  def equip_armor(protection) #NOTE only one piece of armor allowed... stay as is or move to += to stack
     @armor = protection
   end
-#method to earn xp
-	def gain_xp(amount)
-		@xp += amount
-		level_up if @xp >= @next_level[0] #>> should check if you've earned enough to reach next level
+
+#method to look in backpack
+	def inventory
+		puts "gold: #{@gold}"
+		@items.each {|item, amount| puts "#{item}: #{amount}"}
 	end
+
+#method to gain and spend gold
+  def change_gold(amount)
+    @gold += amount
+  end
 
 #method to inspect character status
 	def inspect_character
@@ -36,34 +50,28 @@ class PlayerCharacter
 		puts "#{@name}'s chance of hitting something is #{accuracy}%."
 		puts "Hit Points: #{@hp}"
 		puts "Magic Points: #{@mp}" if @mp
+		puts "Armor: #{@armor}" if @armor > 0
+		puts "Mage Armor Duration: #{@armor_turns_left}" if @armor_turns_left > 0
 	end
-#method to look in backpack
-	def inventory
-		puts "gold: #{@gold}"
-		@items.each {|item, amount| puts "#{item}: #{amount}"}
-	end
-#method to gain and spend gold
-  def change_gold(amount)
-    @gold += amount
-  end
-#method to gain items
-  def gain_item(item)
-    @items[item] += 1
-  end
-#method to use items ===Put items in own class?==
-  def use_item(item)
-    @items[item] -= 1
-    puts "#{@name} used #{item}."
-    @items.delete(item) if @items[item] == 0
-    yield if block_given?
-  end
+### UNUSED METHODS FOR ITEMS
+# #method to gain items
+#   def gain_item(item)
+#     @items[item] += 1
+#   end
+# #method to use items ===Put items in own class?==
+#   def use_item(item)
+#     @items[item] -= 1
+#     puts "#{@name} used #{item}."
+#     @items.delete(item) if @items[item] == 0
+#     yield if block_given?
+#   end
 end
 
 #====core mage class for player character====
 class Mage < PlayerCharacter
 	include Spells
-	attr_accessor :hp, :alive
-	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp
+	attr_accessor :hp, :alive, :armor, :armor_turns_left
+	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp, :level, :blast_cost, :bonus_damage, :armor_cost, :armor_bonus, :armor_duration
 	def initialize(name)
     super()
 	  @name = name
@@ -74,6 +82,13 @@ class Mage < PlayerCharacter
 		@mp = 10
 		@accuracy = 50
 		@armor = 0
+# Spell Variables
+		@blast_cost = 2
+		@bonus_damage = 0
+		@armor_cost = 4
+		@armor_bonus = 20
+		@armor_duration = 5
+		@armor_turns_left = 0
 	end
 
 ##==Mage specific methods==
@@ -101,50 +116,43 @@ class Mage < PlayerCharacter
 	end
 #method to celebrate leveling up
 	def celebrate
-		"You have leveled up.  Huzzahr."
+		"#{@name} has leveled up.  #{@name} gains 5 HP, 5 MP, and 5 accuracy.  Huzzahr."
+	end
+
+###METHODS TO UPGRADE SPELLS###	
+	def upgrade_blast
+		@blast_cost += 1
+		@bonus_damage += rand(3..4)
 	end
 end
 
 
 
-def fight_krub(player_character) 
-	krub = spawn_krub
-	puts "You found a Krub!"
-	while krub.alive
-		puts "What action do you take?(staff, blast)"
-		action = gets.chomp
-		case action
-		when "staff" then player_character.use_staff(player_character, krub)
-		when "blast" then player_character.blast(player_character, krub)
-		else
-			puts "That's not a viable action!"
-			action = gets.chomp
-		end
-		if krub.alive
-			krub.krub_attack(krub, player_character) 
-		end
-	end
-end
 
-
+### FUNCTIONAL DRIVER CODE ###
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
-action = gets.chomp
-while action != "q"
+puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
+action = gets.chomp #NOTE keeps going after player death - no contingency
+until action == "q"
 	case action
-	when "hunt Krubs"  
-  	fight_krub(player) 
+	when "hunt Krubs" 
+		krub = spawn_krub
+  	player.fight_monster(player, krub) 
   	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
 		action = gets.chomp
-	when "hunt Throgs" then throgb
+	when "hunt Throgs" 
+		throg = spawn_throg
+		player.fight_monster(player, throg)
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
 	when "rest"
 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
-		days = gets.chomp
-		player.change_gold(-days.to_i)
-		player.restore_health(days.to_i*3)
-		player.restore_magic(days.to_i*3)
+		days = gets.chomp.to_i
+		player.change_gold(-days)
+		player.restore_health(days*3)
+		player.restore_magic(days*3)
 		puts "You have rested for #{days} day(s)."
 		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
 		action = gets.chomp
