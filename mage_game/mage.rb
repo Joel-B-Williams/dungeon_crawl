@@ -127,7 +127,7 @@ end
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
+puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
 action = gets.chomp
 while action != "q"
 	case action
@@ -135,7 +135,10 @@ while action != "q"
   	player.fight_krub(player) 
   	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
 		action = gets.chomp
-	when "hunt Throgs" then throgb
+	when "hunt Throgs" 
+		player.fight_throg(player)
+		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		action = gets.chomp
 	when "rest"
 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
 		days = gets.chomp.to_i

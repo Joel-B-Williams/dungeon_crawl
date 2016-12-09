@@ -50,7 +50,7 @@ def fight_krub(player_character) ## Turn into general use thing, add monster var
 			player_character.change_gold(krub.gold) if krub.gold > 0
 			puts "#{player_character.name} has found #{krub.gold} gold!" if krub.gold > 0
 		else
-			krub.krub_attack(krub, player_character)
+			krub.krub_attack(krub, player_character) #### NOTE this will be awkward if method generalized
 			if check_dead(player_character)
 				defeat_enemy(krub, player_character)
 				krub.change_gold(player_character.gold) if player_character.gold > 0
@@ -60,14 +60,50 @@ def fight_krub(player_character) ## Turn into general use thing, add monster var
 	end
 end
 
+def fight_throg(player_character) ## Turn into general use thing, add monster variable/case statement
+	throg = spawn_throg
+	puts "You found a Throg!"
+	until check_dead(throg)
+		puts "What action do you take?(staff, blast)"
+		action = gets.chomp
+		case action
+		when "staff" then player_character.use_staff(player_character, throg)
+		when "blast" then player_character.blast(player_character, throg)
+		else
+			puts "You have fumbled your action!" #retry/redo?
+		end
+		if check_dead(throg)
+			defeat_enemy(player_character, throg)
+			player_character.change_gold(throg.gold) if throg.gold > 0
+			puts "#{player_character.name} has found #{throg.gold} gold!" if throg.gold > 0
+		else
+			throg.throg_attack(throg, player_character) #### NOTE this will be awkward if method generalized
+			if check_dead(player_character)
+				defeat_enemy(throg, player_character)
+				throg.change_gold(player_character.gold) if player_character.gold > 0
+				puts "#{throg.name} has found #{player_character.gold} gold!" if player_character.gold > 0
+			end
+		end
+	end
+end
+
 		#### MONSTER ATTACKS ####
 
-	def krub_attack(krub, player_character)
+	def krub_attack(krub, player_character)  ### Combine into one method - monster and rand(dmg) variables ### NOTE -> check_shield would go in these only?
 		if attack_target(krub, player_character) 
 			puts "#{krub.name} hit #{player_character.name}!"
 			take_damage(krub, player_character, rand(1..4)) 
 		else
 			puts "#{krub.name} missed!"
+		end
+	end
+
+		def throg_attack(throg, player_character)
+		if attack_target(throg, player_character) 
+			puts "#{throg.name} hit #{player_character.name}!"
+			take_damage(throg, player_character, rand(1..4)) 
+		else
+			puts "#{throg.name} missed!"
 		end
 	end
 
