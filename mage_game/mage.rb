@@ -147,7 +147,8 @@ class Mage < PlayerCharacter
 
 	def upgrade_mage_armor
 		@armor_cost += 1
-		@armor_duration += 2
+		@armor_duration += 1
+		@armor_bonus += 10
 	end
  
 	def upgrade_mage_shield
