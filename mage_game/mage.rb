@@ -52,6 +52,7 @@ class PlayerCharacter
 		puts "Magic Points: #{@mp}" if @mp
 		puts "Armor: #{@armor}" if @armor > 0
 		puts "Mage Armor Duration: #{@armor_turns_left}" if @armor_turns_left > 0
+		puts "Shields: #{@shield_count}" if @shield_count > 0
 	end
 ### UNUSED METHODS FOR ITEMS
 # #method to gain items
@@ -70,8 +71,8 @@ end
 #====core mage class for player character====
 class Mage < PlayerCharacter
 	include Spells
-	attr_accessor :hp, :alive, :armor, :armor_turns_left
-	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp, :level, :blast_cost, :bonus_damage, :armor_cost, :armor_bonus, :armor_duration
+	attr_accessor :hp, :alive, :armor, :armor_turns_left, :shield_count
+	attr_reader :accuracy, :name, :mp, :max_hp, :max_mp, :level, :blast_cost, :bonus_damage, :armor_cost, :armor_bonus, :armor_duration, :shield_cost, :shields_generated
 	def initialize(name)
     super()
 	  @name = name
@@ -89,6 +90,9 @@ class Mage < PlayerCharacter
 		@armor_bonus = 20
 		@armor_duration = 5
 		@armor_turns_left = 0
+		@shield_cost = 4
+		@shield_count = 0
+		@shields_generated = 1
 	end
 
 ##==Mage specific methods==
@@ -108,6 +112,7 @@ class Mage < PlayerCharacter
 #method to level up 
 	def level_up
 		puts celebrate
+		upgrade_spell
 		@level += 1
 		@max_hp += 5
 		@max_mp += 5
@@ -119,54 +124,88 @@ class Mage < PlayerCharacter
 		"#{@name} has leveled up.  #{@name} gains 5 HP, 5 MP, and 5 accuracy.  Huzzahr."
 	end
 
+	# Method to choose spell to upgrade when new level reached
+	def upgrade_spell
+		puts "Which spell would you like to enhance? (blast, armor, shield)"
+		spell_choice = gets.chomp
+		until spell_choice = "blast" || "armor" || "shield"
+			puts "Choose a spell to upgrade! (blast, armor, shield)"
+			spell_choice = gets.chomp
+		end
+		case spell_choice
+		when "blast" then upgrade_blast
+		when "armor" then upgrade_mage_armor
+		when "shield" then upgrade_mage_shield
+		end
+	end
+
 ###METHODS TO UPGRADE SPELLS###	
 	def upgrade_blast
 		@blast_cost += 1
 		@bonus_damage += rand(3..4)
+	end
+
+	def upgrade_mage_armor
+		@armor_cost += 1
+		@armor_duration += 2
+	end
+ 
+	def upgrade_mage_shield
+		@shield_cost += 1
+		@shields_generated += 1
 	end
 end
 
 
 
 
-### FUNCTIONAL DRIVER CODE ###
+### DRIVER CODE ###
+standard_action = "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
+puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
 	case action
 	when "hunt Krubs" 
 		krub = spawn_krub
   	player.fight_monster(player, krub) 
-  	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts standard_action
 		action = gets.chomp
 	when "hunt Throgs" 
 		throg = spawn_throg
 		player.fight_monster(player, throg)
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts standard_action
 		action = gets.chomp
 	when "rest"
 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
 		days = gets.chomp.to_i
-		player.change_gold(-days)
-		player.restore_health(days*3)
-		player.restore_magic(days*3)
-		puts "You have rested for #{days} day(s)."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
+		if player.gold >= days
+			player.change_gold(-days)
+			player.restore_health(days*3)
+			player.restore_magic(days*3)
+			puts "You have rested for #{days} day(s)."
+		else
+			puts "You don't have the coin for that many days!"
+		end
+	puts "_"*20		
+	puts standard_action
+	action = gets.chomp
 	when "status" 
 		player.inspect_character
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	when "inventory"
 		player.inventory
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	else 
 		puts "Try again, #{player.name}."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	end
 end

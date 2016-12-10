@@ -49,7 +49,7 @@ end
 require_relative 'monster'
 
 describe Monster do
-	let(:krub) {Monster.new("Krub", 0, 4, 30, 10, 1)}
+	let(:krub) {Monster.new("Krub", 0, 4, 30, 10, 1, (1..4))}
 
 	it "gains player's XP if it kills the player" do
 		expect(krub.gain_xp(100)). to eq 100
@@ -80,5 +80,46 @@ describe Mage do
 		player.mage_armor(player)
 		player.mage_armor(player)
 		expect(player.armor_turns_left). to eq 10
+	end
+
+	it "recognizes armor spell is active" do
+		player.mage_armor(player)
+		expect(player.mage_armor_active(player)). to eq true
+	end
+
+	it "removes armor bonus when spell ends" do
+		player.mage_armor(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+		player.mage_armor_countdown(player)
+	  player.mage_armor_ends(player) if player.mage_armor_active(player) == false
+	  expect(player.armor). to eq 0
+	end
+
+	it "recognizes when shield spell is active" do
+		player.mage_shield(player)
+		expect(player.mage_shield_active(player)). to eq true
+	end
+
+	it "removes shields once used" do
+		player.mage_shield(player)
+		expect(player.mage_shield_break(player)). to eq 0
+	end
+
+	it "upgrades blast spell" do
+		player.upgrade_blast
+		expect(player.blast_cost). to eq 3
+	end
+
+	it "upgrades mage armor spell" do
+		player.upgrade_mage_armor
+		expect(player.armor_duration). to eq 7
+	end
+
+	it "upgrades mage shield spell" do
+		player.upgrade_mage_shield
+		expect(player.shields_generated). to eq 2
 	end
 end
