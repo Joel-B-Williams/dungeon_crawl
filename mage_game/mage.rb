@@ -126,9 +126,10 @@ class Mage < PlayerCharacter
 
 	# Method to choose spell to upgrade when new level reached
 	def upgrade_spell
+		valid_choice = ["blast", "armor", "shield"]
 		puts "Which spell would you like to enhance? (blast, armor, shield)"
 		spell_choice = gets.chomp
-		until spell_choice == "blast" || "armor" || "shield"
+		until valid_choice.include?(spell_choice)
 			puts "Choose a spell to upgrade! (blast, armor, shield)"
 			spell_choice = gets.chomp
 		end
@@ -167,6 +168,7 @@ end
 
 
 ### DRIVER CODE ###
+line_break = "_"*40
 standard_action = "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
 puts "What are you called, magus?"
 name = gets.chomp
@@ -196,22 +198,22 @@ until action == "q"
 		else
 			puts "You don't have the coin for that many days!"
 		end
-	puts "_"*20		
+	puts line_break	
 	puts standard_action
 	action = gets.chomp
 	when "status" 
 		player.inspect_character
-		puts "_"*20
+		puts line_break
 		puts standard_action
 		action = gets.chomp
 	when "inventory"
 		player.inventory
-		puts "_"*20
+		puts line_break
 		puts standard_action
 		action = gets.chomp
 	else 
 		puts "Try again, #{player.name}."
-		puts "_"*20
+		puts line_break
 		puts standard_action
 		action = gets.chomp
 	end
