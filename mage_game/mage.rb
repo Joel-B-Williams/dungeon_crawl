@@ -128,21 +128,27 @@ class Mage < PlayerCharacter
 	def upgrade_spell
 		puts "Which spell would you like to enhance? (blast, armor, shield)"
 		spell_choice = gets.chomp
-		until spell_choice = "blast" || "armor" || "shield"
+		until spell_choice == "blast" || "armor" || "shield"
 			puts "Choose a spell to upgrade! (blast, armor, shield)"
 			spell_choice = gets.chomp
 		end
-		case spell_choice
-		when "blast" then upgrade_blast
-		when "armor" then upgrade_mage_armor
-		when "shield" then upgrade_mage_shield
+		case spell_choice 
+		when "blast" 
+			puts "Blast has been enhanced!"
+		  upgrade_blast
+		when "armor" 
+			puts "Mage Armor has been enhanced!"
+			upgrade_mage_armor
+		when "shield" 
+			puts "Mage Shield has been enhanced!"
+			upgrade_mage_shield
 		end
 	end
 
 ###METHODS TO UPGRADE SPELLS###	
 	def upgrade_blast
 		@blast_cost += 1
-		@bonus_damage += rand(3..4)
+		@bonus_damage += 3
 	end
 
 	def upgrade_mage_armor
@@ -210,3 +216,6 @@ until action == "q"
 		action = gets.chomp
 	end
 end
+
+#### NOTES ####
+# blast lvl 3 == death to throgs everywhere... starting at lvl 3 multiple enemies need to spawn (defensive spells = important)
