@@ -108,4 +108,18 @@ describe Mage do
 		expect(player.mage_shield_break(player)). to eq 0
 	end
 
+	it "upgrades blast spell" do
+		player.upgrade_blast
+		expect(player.blast_cost). to eq 3
+	end
+
+	it "upgrades mage armor spell" do
+		player.upgrade_mage_armor
+		expect(player.armor_duration). to eq 7
+	end
+
+	it "upgrades mage shield spell" do
+		player.upgrade_mage_shield
+		expect(player.shields_generated). to eq 2
+	end
 end

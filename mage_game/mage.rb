@@ -112,6 +112,7 @@ class Mage < PlayerCharacter
 #method to level up 
 	def level_up
 		puts celebrate
+		upgrade_spell
 		@level += 1
 		@max_hp += 5
 		@max_mp += 5
@@ -123,17 +124,42 @@ class Mage < PlayerCharacter
 		"#{@name} has leveled up.  #{@name} gains 5 HP, 5 MP, and 5 accuracy.  Huzzahr."
 	end
 
+	# Method to choose spell to upgrade when new level reached
+	def upgrade_spell
+		puts "Which spell would you like to enhance? (blast, armor, shield)"
+		spell_choice = gets.chomp
+		until spell_choice = "blast" || "armor" || "shield"
+			puts "Choose a spell to upgrade! (blast, armor, shield)"
+			spell_choice = gets.chomp
+		end
+		case spell_choice
+		when "blast" then upgrade_blast
+		when "armor" then upgrade_mage_armor
+		when "shield" then upgrade_mage_shield
+		end
+	end
+
 ###METHODS TO UPGRADE SPELLS###	
 	def upgrade_blast
 		@blast_cost += 1
 		@bonus_damage += rand(3..4)
+	end
+
+	def upgrade_mage_armor
+		@armor_cost += 1
+		@armor_duration += 2
+	end
+ 
+	def upgrade_mage_shield
+		@shield_cost += 1
+		@shields_generated += 1
 	end
 end
 
 
 
 
-### FUNCTIONAL DRIVER CODE ###
+### DRIVER CODE ###
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
