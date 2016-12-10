@@ -160,43 +160,52 @@ end
 
 
 ### DRIVER CODE ###
+standard_action = "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)" # store in "get action" variable?
+puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
 	case action
 	when "hunt Krubs" 
 		krub = spawn_krub
   	player.fight_monster(player, krub) 
-  	puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts standard_action
 		action = gets.chomp
 	when "hunt Throgs" 
 		throg = spawn_throg
 		player.fight_monster(player, throg)
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts standard_action
 		action = gets.chomp
 	when "rest"
 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
 		days = gets.chomp.to_i
-		player.change_gold(-days)
-		player.restore_health(days*3)
-		player.restore_magic(days*3)
-		puts "You have rested for #{days} day(s)."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
-		action = gets.chomp
+		if player.gold >= days
+			player.change_gold(-days)
+			player.restore_health(days*3)
+			player.restore_magic(days*3)
+			puts "You have rested for #{days} day(s)."
+		else
+			puts "You don't have the coin for that many days!"
+		end
+	puts "_"*20		
+	puts standard_action
+	action = gets.chomp
 	when "status" 
 		player.inspect_character
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	when "inventory"
 		player.inventory
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	else 
 		puts "Try again, #{player.name}."
-		puts "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'q' to quit)"
+		puts "_"*20
+		puts standard_action
 		action = gets.chomp
 	end
 end
