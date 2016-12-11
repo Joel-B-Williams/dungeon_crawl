@@ -171,7 +171,7 @@ end
 
 ### DRIVER CODE ###
 line_break = "_"*40
-standard_action = "Would you like to hunt Krubs, hunt Throgs, slay The Grindel, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
+standard_action = "Would you like to hunt Krubs, hunt Throgs, hunt Smulgs, slay The Grindel, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
@@ -187,6 +187,11 @@ until action == "q"
 	when "hunt Throgs" 
 		throg = spawn_throg
 		player.fight_monster(player, throg)
+		puts standard_action
+		action = gets.chomp
+	when "hunt Smulgs"
+		smulg = spawn_smulg
+		player.fight_monster(player, smulg)
 		puts standard_action
 		action = gets.chomp
 	when "slay The Grindel"

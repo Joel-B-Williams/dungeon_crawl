@@ -50,6 +50,9 @@ def fight_monster(player_character, monster)
 			monster.monster_attack(monster, player_character, monster.damage_range) 
 			#insert case statement special abilities here
 			case monster.name
+			when "Smulg"
+				puts "The Smulg regenerates health!"
+				monster.regenerate(3)
 			when "Grindel"
 				monster.monster_attack(monster, player_character, monster.damage_range)
 				puts "The Grindel regenerates health!"
