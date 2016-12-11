@@ -28,6 +28,7 @@ module Combat
 def fight_monster(player_character, monster) 
 	line_break = "_"*20
 	puts "You found a #{monster.name}!"
+	puts line_break
 	until check_dead(monster) || check_dead(player_character)
 		puts "What action do you take?(staff, blast, armor, shield)"
 		action = gets.chomp
@@ -45,7 +46,6 @@ def fight_monster(player_character, monster)
 		end
 		if check_dead(monster)
 			defeat_enemy(player_character, monster)
-			puts line_break
 		else
 			monster.monster_attack(monster, player_character, monster.damage_range) 
 			#insert case statement special abilities here
