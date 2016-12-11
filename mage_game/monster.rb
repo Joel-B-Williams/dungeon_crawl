@@ -59,7 +59,10 @@ def spawn_throg
 end
 
 #add minor regenerating beast worth 50xp?
+def spawn_smulg
+  smulg = spawn_monster("Smulg", 30, 15, 65, 50, rand(3..5), (3..10))
+end
 
 def spawn_grindel
-  grindel = spawn_monster("Grindel", 40, 30, 80, 300, 50, (3..10))
+  grindel = spawn_monster("Grindel", 40, 30, 80, 300, 50, (5..12))
 end
