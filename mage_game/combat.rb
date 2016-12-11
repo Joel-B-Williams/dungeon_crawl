@@ -67,6 +67,7 @@ def fight_monster(player_character, monster)
 			player_character.mage_armor_ends(player_character) if player_character.mage_armor_active(player_character) == false
 		end
 	end
+	player_character.shield_count = 0
 end
 
 		#### MONSTER ATTACK ####
