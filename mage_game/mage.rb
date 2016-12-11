@@ -117,7 +117,9 @@ class Mage < PlayerCharacter
 		upgrade_spell #Comment out for RSpec Testing (requires user input) -> find way to move out of level_up method?
 		@level += 1
 		@max_hp += 5
+		@hp += 5
 		@max_mp += 5
+		@mp += 5
 		@accuracy += 5
 		@next_level[0] += @next_level[0]
 	end
@@ -182,18 +184,12 @@ until action == "q"
 	when "hunt Krubs" 
 		krub = spawn_krub
   	player.fight_monster(player, krub) 
-		puts standard_action
-		action = gets.chomp
 	when "hunt Throgs" 
 		throg = spawn_throg
 		player.fight_monster(player, throg)
-		puts standard_action
-		action = gets.chomp
 	when "hunt Smulgs"
 		smulg = spawn_smulg
 		player.fight_monster(player, smulg)
-		puts standard_action
-		action = gets.chomp
 	when "slay The Grindel"
 		grindel = spawn_grindel
 		player.fight_monster(player, grindel)
@@ -210,25 +206,16 @@ until action == "q"
 		else
 			puts "You don't have the coin for that many days!"
 		end
-	puts line_break	
-	puts standard_action
-	action = gets.chomp
 	when "status" 
 		player.inspect_character
-		puts line_break
-		puts standard_action
-		action = gets.chomp
 	when "inventory"
 		player.inventory
-		puts line_break
-		puts standard_action
-		action = gets.chomp
 	else 
 		puts "Try again, #{player.name}."
-		puts line_break
-		puts standard_action
-		action = gets.chomp
 	end
+	puts line_break
+	puts standard_action
+	action = gets.chomp
 end
 
 #### NOTES ####
