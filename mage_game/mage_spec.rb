@@ -58,6 +58,17 @@ describe Monster do
 	it "gains player's gold if it kills the player" do
 		expect(krub.change_gold(10)). to eq 10
 	end
+
+	it "regenerates health" do
+		krub.take_damage("attacker", krub, 3)
+		krub.regenerate(2)
+		expect(krub.hp). to eq 3
+	end
+
+	it "does not regenerate beyond starting health" do
+		krub.regenerate(2)
+		expect(krub.hp). to eq 4
+	end
 end
 
 require_relative 'spells'

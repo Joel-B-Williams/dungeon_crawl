@@ -25,7 +25,7 @@ module Combat
 	end
 
 			#### FIGHT LOOP ####
-def fight_monster(player_character, monster) # moved "case" to choice of monster to hunt (spawns there instead)
+def fight_monster(player_character, monster) 
 	line_break = "_"*20
 	puts "You found a #{monster.name}!"
 	until check_dead(monster) || check_dead(player_character)
@@ -49,6 +49,12 @@ def fight_monster(player_character, monster) # moved "case" to choice of monster
 		else
 			monster.monster_attack(monster, player_character, monster.damage_range) 
 			#insert case statement special abilities here
+			case monster.name
+			when "Grindel"
+				monster.monster_attack(monster, player_character, monster.damage_range)
+				puts "The Grindel regenerates health!"
+				monster.regenerate(3)
+			end
 			puts line_break
 			if check_dead(player_character)
 				defeat_enemy(monster, player_character)
@@ -65,7 +71,7 @@ end
 
 		#### MONSTER ATTACK ####
 
-	def monster_attack(monster, player_character, damage_range) ## check_shield would go in these only?
+	def monster_attack(monster, player_character, damage_range) 
 		if attack_target(monster, player_character) 
 			## shield logic
 			if player_character.mage_shield_active(player_character)

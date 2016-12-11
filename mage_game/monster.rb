@@ -4,10 +4,11 @@ class Monster
  	include Combat
   attr_accessor :hp, :xp, :gold, :alive
   attr_reader :name, :armor, :accuracy, :damage_range
-  def initialize(name, armor, hp, accuracy, xp, gold, damage_range)
+  def initialize(name, armor, max_hp, accuracy, xp, gold, damage_range)
     @name = name
     @armor = armor
-    @hp = hp
+    @max_hp = max_hp
+    @hp = max_hp
     @accuracy = accuracy
     @xp = xp
     @gold = gold
@@ -34,10 +35,15 @@ class Monster
     amount
   end
 
+  def regenerate(health_gained)
+    @hp += health_gained
+    @hp = @max_hp if @hp > @max_hp
+  end
+
 end
 
-def spawn_monster(name, armor, hp, accuracy, xp, gold, damage_range)
-  monster = Monster.new(name, armor, hp, accuracy, xp, gold, damage_range)
+def spawn_monster(name, armor, max_hp, accuracy, xp, gold, damage_range)
+  monster = Monster.new(name, armor, max_hp, accuracy, xp, gold, damage_range)
   #monster.activate_monster # is activating whenever player attacks/casts damaging spell
   #monster
 end
@@ -50,4 +56,8 @@ end
 
 def spawn_throg 
   throg = spawn_monster("Throg", 20, 8, 50, 20, rand(1..3), (2..9))
+end
+
+def spawn_grindel
+  grindel = spawn_monster("Grindel", 40, 30, 70, 300, 50, (3..10))
 end

@@ -84,12 +84,15 @@ class Mage < PlayerCharacter
 		@accuracy = 50
 		@armor = 0
 # Spell Variables
+		#blast spell
 		@blast_cost = 2
 		@bonus_damage = 0
+		#mage armor spell
 		@armor_cost = 4
 		@armor_bonus = 20
 		@armor_duration = 5
 		@armor_turns_left = 0
+		#mage shield spell
 		@shield_cost = 4
 		@shield_count = 0
 		@shields_generated = 1
@@ -112,7 +115,7 @@ class Mage < PlayerCharacter
 #method to level up 
 	def level_up
 		puts celebrate
-		upgrade_spell
+		upgrade_spell #Comment out for RSpec Testing (requires user input) -> find way to move out of level_up method?
 		@level += 1
 		@max_hp += 5
 		@max_mp += 5
@@ -154,7 +157,7 @@ class Mage < PlayerCharacter
 
 	def upgrade_mage_armor
 		@armor_cost += 1
-		@armor_duration += 1
+		@armor_duration += 2
 		@armor_bonus += 10
 	end
  
@@ -167,57 +170,62 @@ end
 
 
 
-### DRIVER CODE ###
-line_break = "_"*40
-standard_action = "Would you like to hunt Krubs, hunt Throgs, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
-puts "What are you called, magus?"
-name = gets.chomp
-player = Mage.new(name)
-puts standard_action
-action = gets.chomp #NOTE keeps going after player death - no contingency
-until action == "q"
-	case action
-	when "hunt Krubs" 
-		krub = spawn_krub
-  	player.fight_monster(player, krub) 
-		puts standard_action
-		action = gets.chomp
-	when "hunt Throgs" 
-		throg = spawn_throg
-		player.fight_monster(player, throg)
-		puts standard_action
-		action = gets.chomp
-	when "rest"
-		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
-		days = gets.chomp.to_i
-		if player.gold >= days
-			player.change_gold(-days)
-			player.restore_health(days*3)
-			player.restore_magic(days*3)
-			puts "You have rested for #{days} day(s)."
-		else
-			puts "You don't have the coin for that many days!"
-		end
-	puts line_break	
-	puts standard_action
-	action = gets.chomp
-	when "status" 
-		player.inspect_character
-		puts line_break
-		puts standard_action
-		action = gets.chomp
-	when "inventory"
-		player.inventory
-		puts line_break
-		puts standard_action
-		action = gets.chomp
-	else 
-		puts "Try again, #{player.name}."
-		puts line_break
-		puts standard_action
-		action = gets.chomp
-	end
-end
+# ### DRIVER CODE ###
+# line_break = "_"*40
+# standard_action = "Would you like to hunt Krubs, hunt Throgs, slay The Grindel, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
+# puts "What are you called, magus?"
+# name = gets.chomp
+# player = Mage.new(name)
+# puts standard_action
+# action = gets.chomp #NOTE keeps going after player death - no contingency
+# until action == "q"
+# 	case action
+# 	when "hunt Krubs" 
+# 		krub = spawn_krub
+#   	player.fight_monster(player, krub) 
+# 		puts standard_action
+# 		action = gets.chomp
+# 	when "hunt Throgs" 
+# 		throg = spawn_throg
+# 		player.fight_monster(player, throg)
+# 		puts standard_action
+# 		action = gets.chomp
+# 	when "slay The Grindel"
+# 		grindel = spawn_grindel
+# 		player.fight_monster(player, grindel)
+# 		puts "You have slayed The Grindel and saved the town of Aran!!  Huzzahr."
+# 		exit
+# 	when "rest"
+# 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
+# 		days = gets.chomp.to_i
+# 		if player.gold >= days
+# 			player.change_gold(-days)
+# 			player.restore_health(days*3)
+# 			player.restore_magic(days*3)
+# 			puts "You have rested for #{days} day(s)."
+# 		else
+# 			puts "You don't have the coin for that many days!"
+# 		end
+# 	puts line_break	
+# 	puts standard_action
+# 	action = gets.chomp
+# 	when "status" 
+# 		player.inspect_character
+# 		puts line_break
+# 		puts standard_action
+# 		action = gets.chomp
+# 	when "inventory"
+# 		player.inventory
+# 		puts line_break
+# 		puts standard_action
+# 		action = gets.chomp
+# 	else 
+# 		puts "Try again, #{player.name}."
+# 		puts line_break
+# 		puts standard_action
+# 		action = gets.chomp
+# 	end
+# end
 
-#### NOTES ####
-# blast lvl 3 == death to throgs everywhere... starting at lvl 3 multiple enemies need to spawn (defensive spells = important)
+# #### NOTES ####
+# # blast lvl 3 == death to throgs everywhere... starting at lvl 3 multiple enemies need to spawn (defensive spells = important)
