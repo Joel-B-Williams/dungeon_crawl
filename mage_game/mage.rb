@@ -87,12 +87,12 @@ class Mage < PlayerCharacter
 		@blast_cost = 2
 		@bonus_damage = 0
 		#mage armor spell
-		@armor_cost = 4
+		@armor_cost = 3
 		@armor_bonus = 20
 		@armor_duration = 5
 		@armor_turns_left = 0
 		#mage shield spell
-		@shield_cost = 4
+		@shield_cost = 3
 		@shield_count = 0
 		@shields_generated = 1
 	end
@@ -158,7 +158,7 @@ class Mage < PlayerCharacter
 
 	def upgrade_mage_armor
 		@armor_cost += 1
-		@armor_duration += 2
+		@armor_duration += 1
 		@armor_bonus += 10
 	end
  
@@ -169,32 +169,53 @@ class Mage < PlayerCharacter
 end
 
 
-
+#establish available monster array
+#when player opts to hunt monsters, display options inside array
+# fight_monster based on selection
 
 ### DRIVER CODE ###
 line_break = "_"*40
-standard_action = "Would you like to hunt Krubs, hunt Throgs, hunt Smulgs, slay The Grindel, or rest?('status' to check status, 'inventory' to check inventory, 'q' to quit)"
+standard_action = "Would you like to hunt monsters, rest, check status, or check inventory? ('q' to quit)"
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
+puts "Behold, the power of the ancients flows through you!" ## FOR QUICK TESTINGs
+player.level_up
+player.level_up 
+player.level_up
 puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
 	case action
-	when "hunt Krubs" 
-		krub = spawn_krub
-  	player.fight_monster(player, krub) 
-	when "hunt Throgs" 
-		throg = spawn_throg
-		player.fight_monster(player, throg)
-	when "hunt Smulgs"
-		smulg = spawn_smulg
-		player.fight_monster(player, smulg)
-	when "slay The Grindel"
-		grindel = spawn_grindel
-		player.fight_monster(player, grindel)
+	when "hunt monsters"
+		#player selects which monster type to hunt
+		available_monsters = ["Krubs", "Throgs", "Smulgs", "The Grindel"] #work out way to alter this list based on level
+		hunt_prompt = "Which monster will you hunt?: "
+		available_monsters.each {|monster| hunt_prompt += monster+" "}
+		puts hunt_prompt
+		monster_choice = gets.chomp
+		until available_monsters.include?(monster_choice)
+			puts hunt_prompt
+			monster_choice = gets.chomp
+		end
+		#populate combat instance with appropriate number of monsters
+		monsters = []
+		case monster_choice
+		when "Krubs" 
+		(player.level).times {monsters << spawn_krub}
+  	player.fight_monster(player, monsters) 
+		when "Throgs" 
+		(player.level/2).times {monsters << spawn_throg}
+		player.fight_monster(player, monsters)
+		when "hunt Smulgs"
+		(player.leve./3).times {monsters << spawn_smulg}
+		player.fight_monster(player, monsters)
+		when "slay The Grindel"
+		monsters << spawn_grindel
+		player.fight_monster(player, monsters)
 		puts "You have slayed The Grindel and saved the town of Aran!!  Huzzahr."
 		exit
+	end
 	when "rest"
 		puts "How many days would you like to rest for? (3hp/mp per day, 1 gp per day)"
 		days = gets.chomp.to_i
@@ -206,9 +227,9 @@ until action == "q"
 		else
 			puts "You don't have the coin for that many days!"
 		end
-	when "status" 
+	when "check status" 
 		player.inspect_character
-	when "inventory"
+	when "check inventory"
 		player.inventory
 	else 
 		puts "Try again, #{player.name}."
