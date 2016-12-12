@@ -179,10 +179,6 @@ standard_action = "Would you like to hunt monsters, rest, check status, or check
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-puts "Behold, the power of the ancients flows through you!" ## FOR QUICK TESTINGs
-player.level_up
-player.level_up 
-player.level_up
 puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
