@@ -91,6 +91,7 @@ module Combat
 			end
 		end
 		player_character.shield_count = 0
+		player_character.mage_armor_ends(player_character) if player_character.mage_armor_active(player_character) == true
 		player_character.armor_turns_left = 0
 	end
 

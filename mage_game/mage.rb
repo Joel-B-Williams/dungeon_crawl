@@ -179,13 +179,15 @@ standard_action = "Would you like to hunt monsters, rest, check status, or check
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
+player.level_up
+player.level_up
 puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
 	case action
 	when "hunt monsters"
 		#player selects which monster type to hunt
-		available_monsters = ["Krubs", "Throgs", "Smulgs", "The Grindel"] #work out way to alter this list based on level
+		available_monsters = ["Krubs", "Throgs", "Smulgs", "The Grindel"] #work out way to alter this list based on level... or location?
 		hunt_prompt = "Which monster will you hunt?: "
 		available_monsters.each {|monster| hunt_prompt += monster+" "}
 		puts hunt_prompt
@@ -203,8 +205,8 @@ until action == "q"
 		when "Throgs" 
 		(player.level/2).times {monsters << spawn_throg}
 		player.fight_monster(player, monsters)
-		when "hunt Smulgs"
-		(player.leve./3).times {monsters << spawn_smulg}
+		when "Smulgs"
+		(player.level/3).times {monsters << spawn_smulg}
 		player.fight_monster(player, monsters)
 		when "slay The Grindel"
 		monsters << spawn_grindel
