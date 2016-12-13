@@ -179,8 +179,6 @@ standard_action = "Would you like to hunt monsters, rest, check status, or check
 puts "What are you called, magus?"
 name = gets.chomp
 player = Mage.new(name)
-player.level_up
-player.level_up
 puts standard_action
 action = gets.chomp #NOTE keeps going after player death - no contingency
 until action == "q"
@@ -208,7 +206,7 @@ until action == "q"
 		when "Smulgs"
 		(player.level/3).times {monsters << spawn_smulg}
 		player.fight_monster(player, monsters)
-		when "slay The Grindel"
+		when "The Grindel"
 		monsters << spawn_grindel
 		player.fight_monster(player, monsters)
 		puts "You have slayed The Grindel and saved the town of Aran!!  Huzzahr."
